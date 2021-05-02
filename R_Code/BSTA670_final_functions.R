@@ -67,7 +67,12 @@ data_generator <-  function(N,beta,K,n)
   Y = rbinom(N,1,meanY)
   data = data.frame(cbind(X1,X2,X3,X4,Y))
   # add hospital ID
-  data$ID = rep(1:K, each = n)
+  if (length(n) == 1){
+    data$ID = rep(1:K, each = n)
+  }else{
+    data$ID = rep(1:K, n)
+  }
+  
   return(data)
 }
 ##### ------------------------------------ #####
@@ -135,18 +140,18 @@ main_run_ODAL <-function(Data, beta_true){
   }
   ##### ------------------------------------ #####
   
-  ## initial value
-  sub_est = sub_var = matrix(0, ncol = length(beta_true), nrow = K)
-  for (i in 1:K){
-    sub_data = Data[which(Data$ID == i),]
-    sub_Y = sub_data$Y
-    sub_X = as.matrix(sub_data[,-c(5,6)])
-    sub_fit = summary(glm(Y~X, family = "binomial"(link = "logit")))
-    sub_est[i,] = sub_fit$coefficients[,1]
-    sub_var[i,] =  sub_fit$coefficients[,2]^2
-  }
-  init = apply(sub_est/sub_var,2,function(x){sum(x, na.rm = T)})/apply(1/sub_var,2,function(x){sum(x, na.rm = T)})
-    
+  ## meta initial value
+  # sub_est = sub_var = matrix(0, ncol = length(beta_true), nrow = K)
+  # for (i in 1:K){
+  #   sub_data = Data[which(Data$ID == i),]
+  #   sub_Y = sub_data$Y
+  #   sub_X = as.matrix(sub_data[,-c(5,6)])
+  #   sub_fit = summary(glm(Y~X, family = "binomial"(link = "logit")))
+  #   sub_est[i,] = sub_fit$coefficients[,1]
+  #   sub_var[i,] =  sub_fit$coefficients[,2]^2
+  # }
+  # init = apply(sub_est/sub_var,2,function(x){sum(x, na.rm = T)})/apply(1/sub_var,2,function(x){sum(x, na.rm = T)})
+  #   
   # use local point estimate as initial value
   L = Lgradient(est_local,X,Y)
   
