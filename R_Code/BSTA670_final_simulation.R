@@ -1,7 +1,10 @@
 ##################################################
 ###### Rcode for BSTA670 final project ###########
 ##################################################
-setwd("/Users/jiayito/Dropbox/000_Penn_Phd/1_2021_5_Spring/BSTA670/Final/BSTA670_final/R_Code")
+
+## !! This path is needed to be changed 
+path = "/Users/jiayito/Dropbox/000_Penn_Phd/1_2021_5_Spring/BSTA670/Final/BSTA670_final/R_Code"
+setwd(path)
 
 ## Step I: setup the enviroment
 ## libraries
@@ -10,12 +13,15 @@ library(ggplot2)
 library(matlib)
 library(survival)
 library(parallel)
+library(miceadds)
 
 ## Step II: load the functions
-source("BSTA670_final_functions.R")
+## !!!!! This path is needed to be changed 
+path_func = "/Users/jiayito/Dropbox/000_Penn_Phd/1_2021_5_Spring/BSTA670/Final/BSTA670_final/R_Code/func"
+source.all(path_func, grepstring="\\.R",  print.source=TRUE, file_sep="__")
 
 
-
+## Step III: run ODAL
 ##################################################
 ###Distributed algorithm for logistic regression##
 ###----------------- ODAL ------------------ #####
@@ -239,9 +245,6 @@ legend(7000, 1.1, legend = c("Local", "Pooled","ODAL","clogit"),
 ##### ------------------------------------ #####
 
 
-#################################################
-############ --- parallelization ----- ########## 
-#################################################
-mclapply(c(1:K), run_func, mc.cores = 8)
+
 
 
