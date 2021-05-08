@@ -8,7 +8,6 @@ setwd(path)
 
 ## Step I: setup the enviroment
 ## libraries
-library(mvtnorm)
 library(ggplot2)
 library(matlib)
 library(survival)
