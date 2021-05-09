@@ -1,7 +1,6 @@
 ---
-title: "BSTA670 Final Project -- Extension of 'A one-shot distributed algorithm to perform logistic regressions on electronic health records data from multiple clinical sites'"
+title: "BSTA670 Final Project"
 author: "Jiayi Tong"
-date: "5/9/2021"
 output: pdf_document
 fontsize: 11pt 
 geometry: margin= 1in
@@ -14,11 +13,9 @@ bibliography: references.bib
 ```{r section_1.1, message = FALSE, eval=FALSE}
 # install.packages("devtools")
 library(devtools) 
-
 # github page: https://github.com/JiayiJessieTong/extODAL
 install_github("JiayiJessieTong/extODAL", force = TRUE)
 library(extODAL)
-
 # help page:
 ??extODAL
 ```
@@ -27,17 +24,17 @@ The help page of `extODAL` R package in Rstudio looks like this:
 
 <center>
 
-![extODAL package help pages list](help_page.png){width=60%}
+![extODAL package help pages list](help_page.png){width=40%}
 
 </center>
 
 There are four functions in the `extODAL` R package, including `data_generator`, `data_generator_hetero`, `extODAL_hetero`, `extODAL_homo`. The main function to replicate the simulation in ODAL paper is `extODAL_homo`; the main function to conduct the extension of the ODAL paper is `extODAL_hetero`. The usage details are introduced in the following sections. In these functions, `if else` and `tryCatch()` are used to make sure that the function can handle the potential errors in the inputs/arguments and each replicate simulation. Additionally, the simulation in parallel works for both Mac and Windows. 
 
-Note*: this package passes all checks by R CMD check extODAL_1.0-0.tar.gz. 
+Note*: this package passes all checks by R CMD check extODAL_1.0-0.tar.gz in terminal, except only 1 NOTE, which is for the .travis.yml file. This .travis.yml file is used for travis-ci check on GitHub. This package passes the Travis CI pass: https://github.com/JiayiJessieTong/extODAL/runs/2539430834. 
 
 ## 1.2 Replicate simulation with `extODAL_homo` 
 
-First, let's replicate setting A and B of the simulation study in the ODAL paper. The whole simulation code is wrapped into the `extODAL` R package. By calling function `extODAL_homo`, we can directly get the simulation results for setting A and B in the ODAL paper. 
+First, let's replicate setting A and B of the simulation study in the ODAL paper by calling function `extODAL_homo`.
 
 ### 1.2.1 Not parallelized version:
 In particular, to run simulation setting A, we can set the arguments `setting = "A"`. Argument `Nsim` is the total number of iterations to be ran in the simulation, which takes any integer. To be noted here, larger value of `Nsim` would take longer computing time. Argument `plotit` can take value TRUE or FALSE, and the default value is TRUE. If `plotit = "TRUE"`, a plot as Figure 2 in the ODAL paper will be created. 
@@ -56,13 +53,10 @@ extODAL_homo(Nsim = 50, setting = "B")
 
 ### 1.2.2 Parallelized version:
 
-The `extODAL_homo` function also provides an option to run the simulation replicates in parallel. By setting the argument `parallel_run = TRUE`, we can run the simulation in parallel using half of the total logical cores on the machine (the default is FALSE). For example, on my own desktop, the total number of logical cores is 16 (by calling `detectCores()` in the `parallel` R package). By setting the argument `parallel_run = TRUE`, 8 logical cores are used to run the simulation in parallel.
-
-Especially, to run the simulation replicates in parallel, we can use the following code for setting A and setting B, respectively:
+The `extODAL_homo` function also provides an option to run the simulation replicates in parallel. By setting the argument `parallel_run = TRUE`, we can run the simulation in parallel using half of the total logical cores on the machine (the default is FALSE). For example, on my own desktop, the total number of logical cores is 16 (by calling `detectCores()` in the `parallel` R package). By setting the argument `parallel_run = TRUE`, 8 logical cores are used to run the simulation in parallel. Especially, to run the simulation replicates in parallel, we can use the following code for setting A and setting B, respectively:
 ```{r section_1.2_parallel, message = FALSE, eval=FALSE}
 # setting A
 extODAL_homo(Nsim = 50, setting = "A", parallel_run = TRUE)
-
 # setting B
 extODAL_homo(Nsim = 50, setting = "B", parallel_run = TRUE)
 ```
@@ -78,7 +72,6 @@ Similar as the function introduced above, `extODAL_hetero` takes four arguments,
 ```{r section_1.3_notParallel, message = FALSE, eval=FALSE}
 # extension 1
 extODAL_hetero(Nsim = 50, setting = "1")
-
 # extension 2
 extODAL_hetero(Nsim = 50, setting = "2")
 ```
@@ -89,7 +82,6 @@ To run the simulation in parallel, we can set the argument `parallel_run = TRUE`
 ```{r section_1.3_parallel, message = FALSE, eval=FALSE}
 # extension 1
 extODAL_hetero(Nsim = 50, setting = "1", parallel_run = TRUE)
-
 # extension 2
 extODAL_hetero(Nsim = 50, setting = "2", parallel_run = TRUE)
 ```
@@ -98,9 +90,7 @@ extODAL_hetero(Nsim = 50, setting = "2", parallel_run = TRUE)
 
 ## 2.1 ODAL algorithm
 
-ODAL is a one-shot distributed algorithm to perform logistic regression models with the data from multiple clinical sites (@duan2018odal). By constructing a surrogate likelihood which approximates the target likelihood function (i.e., full likelihood across all sites), the ODAL algorithm improves the estimation of the association study without requiring patient-level data neither iterative communications across sites. 
-
-To evaluate the ODAL algorithm, the authors of the ODAL paper conducted simulation study under various settings. In this report, we mainly focus on the replication of setting A and B from the ODAL paper. 
+ODAL is a one-shot distributed algorithm to perform logistic regression models with the data from multiple clinical sites (@duan2018odal). By constructing a surrogate likelihood which approximates the target likelihood function (i.e., full likelihood across all sites), the ODAL algorithm improves the estimation of the association study without requiring patient-level data neither iterative communications across sites. To evaluate the ODAL algorithm, the authors of the ODAL paper conducted simulation study under various settings. In this report, we mainly focus on the replication of setting A and B from the ODAL paper. 
 
 ## 2.2 ODAL simulation and its extension
 
@@ -140,15 +130,7 @@ In this extension, the ODAL algorithm was compared to the same two methods as in
 
 ### 3.2.2 Extension 2
 
-In this extension, the ODAL algorithm was compared with three methods. In addition to the two aforementioned methods, the conditional logistic regression model was also compared. The conditional logistic regression model is an extension of the conventional logistic regression model. It allows us to cancel out the intercept of the logistic regression model by conditioning on the number of cases in each stratum. 
-
-Specifically, the likelihood for one observation can be written as:
-
-$$
-\mathbb{P}\left(Y_{ij}=1 \mid X_{ij}\right)=\frac{\exp \left(\alpha_{i}+\boldsymbol{\beta}^{\top} X_{ij}\right)}{1+\exp \left(\alpha_{i}+\boldsymbol{\beta}^{\top} X_{ij}\right)}
-$$
-
-where $Y_{ij}$ denotes the label (e.g. case status) of the j-th observation of the i-th stratum/site, $\alpha_i$ is the site-specific intercept, and $\beta$ is the parameter of interest. The conditional likelihood for one pair of observations can be written as:
+In this extension, the ODAL algorithm was compared with three methods. In addition to the two aforementioned methods, the conditional logistic regression model was also compared. The conditional logistic regression model is an extension of the conventional logistic regression model. It allows us to cancel out the intercept of the logistic regression model by conditioning on the number of cases in each stratum. Specifically, the conditional likelihood for one pair of observations can be written as:
 
 \begin{align}
 & \mathbb{P}(Y_{i1} = 1, Y_{i2} = 0 | X_{i1}, X_{i2}, Y_{i1} + Y_{i2} = 1) \\
@@ -157,12 +139,10 @@ where $Y_{ij}$ denotes the label (e.g. case status) of the j-th observation of t
 & = \frac{exp(\beta^{T}X_{i1})}{exp(\beta^{T}X_{i1}) + exp(\beta^{T}X_{i2})}
 \end{align}
 
-where $\alpha_i$ (i.e. intercept, prevalence of disease) is canceled out by conditioning on the cases. 
+where $Y_{ij}$ denotes the label (e.g. case status) of the j-th observation of the i-th stratum/site, $\alpha_i$ is the site-specific intercept, and $\beta$ is the parameter of interest. $\alpha_i$ (i.e. intercept, prevalence of disease) is canceled out by conditioning on the cases. 
 
 
-In Section 2.2, we talked about that to relax the assumption of the data homogeneity, we extended the simulation to a heterogeneous setting (i.e., the disease prevalence values across the clinical sites are different. In other words, in the logistic regression model, the intercepts are different for the clinical sites). The mean prevalence value across all sites is 1. To make the value heterogeneous, random numbers generated from uniform distribution U(-2, 0) are added to the mean prevalence value 1. These values are then used as the true value for intercepts. 
-
-By using the conditional logistic regression model on this heterogeneous data (i.e., heterogeneity in the prevalence), we can get more accurate estimation of the coefficients compared with the pooled estimator, ODAL estimator, and local estimator. The conditional logistic regression model was fit with `clogit()` function from the \textit{survival} package.
+In Section 2.2, we talked about that to relax the assumption of the data homogeneity, we extended the simulation to a heterogeneous setting (i.e., the disease prevalence values across the clinical sites are different. In other words, in the logistic regression model, the intercepts are different for the clinical sites). The mean prevalence value across all sites is 1. To make the value heterogeneous, random numbers generated from uniform distribution U(-2, 0) are added to the mean prevalence value 1. These values are then used as the true value for intercepts. By using the conditional logistic regression model on this heterogeneous data (i.e., heterogeneity in the prevalence), we can get more accurate estimation of the coefficients compared with the pooled estimator, ODAL estimator, and local estimator. The conditional logistic regression model was fit with `clogit()` function from the \textit{survival} package.
 
 # IV. Results
 
@@ -172,18 +152,28 @@ By using the conditional logistic regression model on this heterogeneous data (i
 
 <center>
 
-![Replication of Setting A: fixed size number, increasing the site size. The y-axis is the mean MSE of four covariates and x-axis is the total number of patients across 10 sites.](setting_A.png){width=70%}
+![Replication of Setting A: fixed size number, increasing the site size. The y-axis is the mean MSE of four covariates and x-axis is the total number of patients across 10 sites. ](setting_A.png){width=70%}
 
 </center>
 
-From Figure 2, we can observe that when the size number is fixed (i.e., K = 10), increasing the site size will decrease the mean MSE. The decrease of the MSE is caused by the increasing sample size, which contributes to more accurate estimation of the coefficients in the association study compared with using smaller sample size. From the above figure, we can obverse that the ODAL can reach almost the same accuracy as the pooled estimator when total sample size is relatively large.
+From Figure 2, we can observe that when the size number is fixed (i.e., K = 10), increasing the site size will decrease the mean MSE. The decrease of the MSE is caused by the increasing sample size, which contributes to more accurate estimation of the coefficients in the association study compared with using smaller sample size. From the above figure, we can obverse that the ODAL can reach almost the same accuracy as the pooled estimator when total sample size is relatively large. Using `benchmark()` function in library \textit{rbenchmark}, the mean running time for 1 iteration with 50 replications in benchmark is 0.30 secs and sd is 0.023 secs (code as below). Similarly, by setting `parallel_run = TRUE`, the mean running time is 2.87 secs and sd is 0.07. We can see that although the parallelization is used, the running time not decreases even increases. This is because we only run on 1 iteration and the parallelization is on multiple iterations. In other words, distributing the task into different cores takes time, leading to increasing running time of running only 1 iteration of the simualtion. Thus, in order to see the advantage of the parallelization, we need to run multiple iterations instead. This pattern is the same for all of the following settings. 
+
+```{r, eval=FALSE}
+time = c()
+for (i in 1:50){
+  result = benchmark(extODAL_homo(Nsim = 1, setting = "A", plotit = FALSE), 
+                     replications = 1)
+  time[i] = result$elapsed
+}
+mean(time); sd(time)
+```
 
 
 ### 4.1.2 Setting B
 
 <center>
 
-![Replication of Setting B: fixed site size, increasing the site number. The y-axis is the mean MSE of four covariates (same as Figure 2) and x-axis is the total number of sites ](setting_B.png){width=70%}
+![Replication of Setting B: fixed site size, increasing the site number. The y-axis is the mean MSE of four covariates (same as Figure 2) and x-axis is the total number of sites](setting_B.png){width=70%}
 
 </center>
 
@@ -208,19 +198,19 @@ In this extension, we set the 10 sites to have different sizes. From Figure 4, w
 
 <center>
 
-![Replication of Setting B: fixed site size, increasing the site number. The y-axis is the mean bi of four covariates (same as Figure 2) and x-axis is the total number of sites](extension_2.png){width=70%}
+![Extension 2: fixed site size, increasing the site number. The y-axis is the mean bi of four covariates (same as Figure 2) and x-axis is the total number of sites](extension_2.png){width=70%}
 
 </center>
 
-In this extension, we relax the assumption on the homogeneity of the population across sites. We set different prevalence values (i.e., intercept) for different sites. The conditional logistic regression model is a good fit to take the heterogeneous prevalence rate into account. Thus, in this extension, we compared four methods. From Figure 4, both of ODAL methods and the pooled analysis have relatively larger bias compared with that of the conditional logistic regression model (The bias of the ODAL method is relative too large, so the ODAL line is outside the range and cannot be shown in the figure). In other words, the ODAL method cannot handle the dramatic heterogeneity in the event rate (i.e., prevalence) very well. The pooled analysis is not accurate either since it does not consider the prevalence heterogeneity. 
-
-\newpage
+In this extension, we relax the assumption on the homogeneity of the population across sites. We set different prevalence values (i.e., intercept) for different sites. The conditional logistic regression model is a good fit to take the heterogeneous prevalence rate into account. Thus, in this extension, we compared four methods. From Figure 4, both of ODAL methods and the pooled analysis have relatively larger bias compared with that of the conditional logistic regression model (The bias of the local method is relative too large, so the line is outside the range and cannot be shown in the figure). In other words, the ODAL method cannot handle the dramatic heterogeneity in the event rate (i.e., prevalence) very well. The pooled analysis is not accurate either since it does not consider the prevalence heterogeneity. 
 
 # V. Conclusion
 
 In this report, we replicated the simulation setting A and setting B in @duan2018odal. From the simulation results, we concluded that the ODAL algorithm has almost the same accuracy as the pooled analysis, which is regarded as the gold standard in the real-world. The ODAL algorithm outperforms the local analysis by borrowing more information from other clinical sites in addition to using the local patient-level data only. 
 
 We further extended the ODAL method in two directions. First, we tried to set the site size to be different. The result of this extension has the similar patterns as the setting A and B. The ODAL algorithm is as accurate as the pooled analysis when estimating the coefficients in the association study. Secondly, we simulated the data with heterogeneous prevalence. The ODAL algorithm cannot perform as good as the conditional logistic regression model, which is treated as the gold standard method to handle the heterogeneous prevalence. 
+
+To decrease the running time, we also write our code to allow parallelization. Based on the experiment we found that the running time using parallelization for only 1 iteration does not have any advantages compared with not running in parallel. This is because of the time cost for distributing the tasks to different cores. Thus, in order to save time using parallelization, multiple iterations for the simulation would be recommended compared with only 1 iteration. 
 
 The one-shot distributed framework that ODAL admits provides a communication-efficient, privacy-preserving and accurate method to analyze the real-world multi-center data. In order to apply this framework in general cases in practice, the extensions of this algorithm can be further investigated. For example, the conditional logistic regression model can be developed into this distributed framework. 
 
